@@ -1,0 +1,12 @@
+flask
+python-dotenv
+pinecone-client
+cohere
+gemini
+langchain
+langchain-community
+langchain-pinecone
+pdfplumber
+python-magic-bin
+tiktoken
+pydantic==2.5.3

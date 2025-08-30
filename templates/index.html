@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DocuQuery</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3a0ca3;
+      --success: #4cc9f0;
+      --danger: #f72585;
+      --warning: #fca311;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --light-gray: #e9ecef;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f5f7fb;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+    
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 20px;
+    }
+    
+    .sidebar {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+    
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+    
+    .card h2 {
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--light-gray);
+      color: var(--primary);
+    }
+    
+    .upload-area {
+      border: 2px dashed var(--primary);
+      border-radius: 8px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .upload-area:hover {
+      background-color: rgba(67, 97, 238, 0.05);
+    }
+    
+    .upload-area i {
+      font-size: 3rem;
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+    
+    .file-list {
+      margin-top: 15px;
+    }
+    
+    .file-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      background: var(--light-gray);
+      border-radius: 5px;
+      margin-bottom: 8px;
+    }
+    
+    .file-name {
+      flex-grow: 1;
+    }
+    
+    .file-remove {
+      color: var(--danger);
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--light-gray);
+      border-radius: 5px;
+      margin-bottom: 15px;
+      font-size: 1rem;
+      resize: vertical;
+    }
+    
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+    
+    button:hover {
+      background: var(--secondary);
+    }
+    
+    button:disabled {
+      background: var(--gray);
+      cursor: not-allowed;
+    }
+    
+    .btn-secondary {
+      background: var(--gray);
+    }
+    
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+    
+    .session-info {
+      background: var(--light);
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+    }
+    
+    .session-id {
+      font-family: monospace;
+      background: var(--light-gray);
+      padding: 5px;
+      border-radius: 3px;
+      margin: 10px 0;
+      word-break: break-all;
+    }
+    
+    .answer {
+      background: var(--light);
+      padding: 20px;
+      border-radius: 5px;
+      min-height: 200px;
+      margin-bottom: 20px;
+      white-space: pre-wrap;
+    }
+    
+    .source {
+      margin-top: 20px;
+    }
+    
+    .citation {
+      background: var(--light-gray);
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .citation-header {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: var(--primary);
+    }
+    
+    .metrics {
+      display: flex;
+      justify-content: space-between;
+      background: var(--light);
+      padding: 10px 15px;
+      border-radius: 5px;
+      margin-top: 15px;
+    }
+    
+    .metric {
+      text-align: center;
+    }
+    
+    .metric-value {
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: var(--primary);
+    }
+    
+    .metric-label {
+      font-size: 0.9rem;
+      color: var(--gray);
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      margin-left: 10px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .alert {
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    
+    .alert-success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .alert-error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--light-gray);
+    }
+    
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+    }
+    
+    .tab.active {
+      border-bottom: 3px solid var(--primary);
+      color: var(--primary);
+      font-weight: bold;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .progress-container {
+      width: 100%;
+      background-color: #e9ecef;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+    
+    .progress-bar {
+      height: 20px;
+      background-color: var(--primary);
+      border-radius: 5px;
+      width: 0%;
+      transition: width 0.3s;
+    }
+    
+    @media (max-width: 992px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><i class="fas fa-brain"></i> DocuQuery</h1>
+      <p class="subtitle">Upload multiple PDFs and ask contextual questions with accurate citations</p>
+    </header>
+
+    <div class="dashboard">
+      <div class="sidebar">
+        <div class="card">
+          <h2><i class="fas fa-file-upload"></i> Upload Documents</h2>
+          
+          <div class="session-info">
+            <p><strong>Session ID:</strong></p>
+            <div class="session-id" id="sessionId">Not created yet</div>
+            <button id="newSessionBtn" class="btn-secondary">New Session</button>
+          </div>
+          
+          <div class="tabs">
+            <div class="tab active" data-tab="file-upload">File Upload</div>
+            <div class="tab" data-tab="text-input">Text Input</div>
+          </div>
+          
+          <div class="tab-content active" id="file-upload">
+            <div class="upload-area" id="dropZone">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p>Drag & drop PDF files here or click to browse</p>
+              <input type="file" id="fileInput" accept=".pdf" multiple style="display: none;">
+            </div>
+            
+            <div class="file-list" id="fileList">
+              <p>No files selected</p>
+            </div>
+          </div>
+          
+          <div class="tab-content" id="text-input">
+            <textarea id="textInput" placeholder="Paste text here..." rows="6"></textarea>
+          </div>
+          
+          <button id="processBtn">Process Documents</button>
+          <div id="processStatus" class="alert hidden"></div>
+          
+          <div id="progressContainer" class="progress-container hidden">
+            <div class="progress-bar" id="progressBar"></div>
+            <div id="progressText">Processing: 0%</div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h2><i class="fas fa-history"></i> Session History</h2>
+          <div id="sessionHistory">
+            <p>No previous sessions</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="main-content">
+        <div class="card">
+          <h2><i class="fas fa-question-circle"></i> Ask Question</h2>
+          <input type="text" id="queryInput" placeholder="Enter your question...">
+          <button id="queryBtn" disabled>Get Answer</button>
+          
+          <div class="metrics" id="metrics">
+            <div class="metric">
+              <div class="metric-value" id="time">0ms</div>
+              <div class="metric-label">Response Time</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value" id="tokens">0</div>
+              <div class="metric-label">Tokens Used</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value" id="sourcesCount">0</div>
+              <div class="metric-label">Sources</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h2><i class="fas fa-lightbulb"></i> Answer</h2>
+          <div class="answer" id="answer">Your answer will appear here with citations.</div>
+          
+          <div class="source" id="sources">
+            <h3><i class="fas fa-book"></i> Sources</h3>
+            <div id="sourcesList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sessionIdEl = document.getElementById('sessionId');
+      const newSessionBtn = document.getElementById('newSessionBtn');
+      const fileInput = document.getElementById('fileInput');
+      const dropZone = document.getElementById('dropZone');
+      const fileListEl = document.getElementById('fileList');
+      const textInput = document.getElementById('textInput');
+      const processBtn = document.getElementById('processBtn');
+      const processStatusEl = document.getElementById('processStatus');
+      const queryInput = document.getElementById('queryInput');
+      const queryBtn = document.getElementById('queryBtn');
+      const answerEl = document.getElementById('answer');
+      const sourcesEl = document.getElementById('sources');
+      const sourcesListEl = document.getElementById('sourcesList');
+      const metricsEl = document.getElementById('metrics');
+      const timeEl = document.getElementById('time');
+      const tokensEl = document.getElementById('tokens');
+      const sourcesCountEl = document.getElementById('sourcesCount');
+      const sessionHistoryEl = document.getElementById('sessionHistory');
+      const tabs = document.querySelectorAll('.tab');
+      const tabContents = document.querySelectorAll('.tab-content');
+      const progressContainer = document.getElementById('progressContainer');
+      const progressBar = document.getElementById('progressBar');
+      const progressText = document.getElementById('progressText');
+      
+      let sessionId = null;
+      let files = [];
+      let processingInterval = null;
+      
+      loadSessions();
+      
+      newSessionBtn.addEventListener('click', createNewSession);
+      dropZone.addEventListener('click', () => fileInput.click());
+      dropZone.addEventListener('dragover', handleDragOver);
+      dropZone.addEventListener('drop', handleDrop);
+      fileInput.addEventListener('change', handleFileSelect);
+      processBtn.addEventListener('click', processDocuments);
+      queryBtn.addEventListener('click', executeQuery);
+      queryInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') executeQuery();
+      });
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const tabId = tab.getAttribute('data-tab');
+          
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          
+          tabContents.forEach(content => {
+            content.classList.remove('active');
+            if (content.id === tabId) {
+              content.classList.add('active');
+            }
+          });
+        });
+      });
+      
+      function createNewSession() {
+        fetch('/api/create_session', {
+          method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.session_id) {
+            sessionId = data.session_id;
+            sessionIdEl.textContent = sessionId;
+            files = [];
+            updateFileList();
+            updateProcessButton();
+            showStatus('New session created', 'success');
+            loadSessions();
+          } else {
+            throw new Error('Failed to create session');
+          }
+        })
+        .catch(error => {
+          showStatus(`Error: ${error.message}`, 'error');
+        });
+      }
+      
+      function handleDragOver(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.style.backgroundColor = 'rgba(67, 97, 238, 0.1)';
+      }
+      
+      function handleDrop(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.style.backgroundColor = '';
+        
+        const droppedFiles = e.dataTransfer.files;
+        handleFiles(droppedFiles);
+      }
+      
+      function handleFileSelect(e) {
+        const selectedFiles = e.target.files;
+        handleFiles(selectedFiles);
+      }
+      
+      function handleFiles(fileList) {
+        if (!sessionId) {
+          showStatus('Please create a session first', 'error');
+          return;
+        }
+        
+        for (let i = 0; i < fileList.length; i++) {
+          const file = fileList[i];
+          if (file.type === 'application/pdf') {
+            if (!files.some(f => f.name === file.name && f.size === file.size)) {
+              files.push(file);
+            }
+          }
+        }
+        
+        updateFileList();
+        updateProcessButton();
+      }
+      
+      function updateFileList() {
+        if (files.length === 0) {
+          fileListEl.innerHTML = '<p>No files selected</p>';
+          return;
+        }
+        
+        fileListEl.innerHTML = '';
+        files.forEach((file, index) => {
+          const fileItem = document.createElement('div');
+          fileItem.className = 'file-item';
+          fileItem.innerHTML = `
+            <div class="file-name">${file.name}</div>
+            <div class="file-size">(${formatFileSize(file.size)})</div>
+            <div class="file-remove" data-index="${index}"><i class="fas fa-times"></i></div>
+          `;
+          fileListEl.appendChild(fileItem);
+        });
+        
+        document.querySelectorAll('.file-remove').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const index = parseInt(e.currentTarget.getAttribute('data-index'));
+            files.splice(index, 1);
+            updateFileList();
+            updateProcessButton();
+          });
+        });
+      }
+      
+      function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+      }
+      
+      function updateProcessButton() {
+        const hasFiles = files.length > 0;
+        const hasText = textInput.value.trim() !== '';
+        processBtn.disabled = !(hasFiles || hasText) || !sessionId;
+      }
+      
+      function processDocuments() {
+        if (!sessionId) {
+          showStatus('Please create a session first', 'error');
+          return;
+        }
+        
+        processBtn.disabled = true;
+        processBtn.innerHTML = 'Processing... <span class="loading"></span>';
+        showStatus('Processing documents...', 'success');
+        
+        const formData = new FormData();
+        formData.append('session_id', sessionId);
+        
+        files.forEach(file => {
+          formData.append('files', file);
+        });
+        
+        if (textInput.value.trim() !== '') {
+          formData.append('text', textInput.value);
+        }
+        
+        fetch('/api/process', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'processing') {
+            progressContainer.classList.remove('hidden');
+            checkProcessingStatus(sessionId);
+          } else if (data.error) {
+            throw new Error(data.error);
+          } else {
+            showStatus(`Processed ${data.document_count} documents with ${data.chunk_count} chunks successfully!`, 'success');
+            queryBtn.disabled = false;
+            loadSessions();
+          }
+        })
+        .catch(error => {
+          showStatus(`Error: ${error.message}`, 'error');
+        })
+        .finally(() => {
+          processBtn.disabled = false;
+          processBtn.textContent = 'Process Documents';
+        });
+      }
+      
+      function checkProcessingStatus(sessionId) {
+        if (processingInterval) clearInterval(processingInterval);
+        
+        processingInterval = setInterval(() => {
+          fetch(`/api/process_status/${sessionId}`)
+            .then(response => response.json())
+            .then(data => {
+              if (data.status === 'processing') {
+                progressBar.style.width = `${data.progress}%`;
+                progressText.textContent = `Processing: ${Math.round(data.progress)}% (${data.processed_files}/${data.total_files} files)`;
+              } else if (data.status === 'complete') {
+                clearInterval(processingInterval);
+                progressContainer.classList.add('hidden');
+                showStatus(`Processed ${data.document_count} documents with ${data.chunk_count} chunks successfully!`, 'success');
+                queryBtn.disabled = false;
+                loadSessions();
+              } else if (data.status === 'error') {
+                clearInterval(processingInterval);
+                progressContainer.classList.add('hidden');
+                showStatus(`Error: ${data.error}`, 'error');
+              }
+            })
+            .catch(error => {
+              console.error('Error checking status:', error);
+            });
+        }, 2000);
+      }
+      
+      function executeQuery() {
+        const query = queryInput.value.trim();
+        if (!query) return;
+        
+        queryBtn.disabled = true;
+        queryBtn.innerHTML = 'Getting answer... <span class="loading"></span>';
+        answerEl.textContent = 'Generating answer...';
+        sourcesEl.classList.add('hidden');
+        metricsEl.classList.add('hidden');
+        
+        fetch('/api/query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            query: query,
+            session_id: sessionId
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            answerEl.textContent = `Error: ${data.error}`;
+            return;
+          }
+          
+          answerEl.innerHTML = formatAnswer(data.answer);
+          
+          sourcesListEl.innerHTML = '';
+          if (data.sources && data.sources.length > 0) {
+            data.sources.forEach((source, i) => {
+              const sourceEl = document.createElement('div');
+              sourceEl.className = 'citation';
+              sourceEl.innerHTML = `
+                <div class="citation-header">[${source.id}] Source: ${source.source} (Page ${source.page}) - Relevance: ${(source.relevance_score * 100).toFixed(1)}%</div>
+                <div>${escapeHTML(source.content)}</div>
+              `;
+              sourcesListEl.appendChild(sourceEl);
+            });
+            sourcesEl.classList.remove('hidden');
+            sourcesCountEl.textContent = data.sources.length;
+          }
+          
+          timeEl.textContent = `${data.metrics.total}ms`;
+          tokensEl.textContent = data.metrics.tokens;
+          metricsEl.classList.remove('hidden');
+        })
+        .catch(error => {
+          answerEl.textContent = `Error: ${error.message}`;
+        })
+        .finally(() => {
+          queryBtn.disabled = false;
+          queryBtn.textContent = 'Get Answer';
+        });
+      }
+      
+      function loadSessions() {
+        fetch('/api/sessions')
+        .then(response => response.json())
+        .then(data => {
+          if (data.sessions && data.sessions.length > 0) {
+            sessionHistoryEl.innerHTML = '';
+            data.sessions.forEach(session => {
+              const sessionItem = document.createElement('div');
+              sessionItem.className = 'file-item';
+              sessionItem.innerHTML = `
+                <div class="file-name">${session.id}</div>
+                <div class="file-size">${new Date(session.created_at).toLocaleString()}</div>
+                <div class="file-size">${session.document_count} docs</div>
+              `;
+              sessionItem.addEventListener('click', () => {
+                sessionId = session.id;
+                sessionIdEl.textContent = sessionId;
+                showStatus('Session loaded', 'success');
+                queryBtn.disabled = false;
+              });
+              sessionHistoryEl.appendChild(sessionItem);
+            });
+          } else {
+            sessionHistoryEl.innerHTML = '<p>No previous sessions</p>';
+          }
+        })
+        .catch(error => {
+          console.error('Error loading sessions:', error);
+        });
+      }
+      
+      function showStatus(message, type) {
+        processStatusEl.textContent = message;
+        processStatusEl.className = `alert alert-${type}`;
+        processStatusEl.classList.remove('hidden');
+        
+        setTimeout(() => {
+          processStatusEl.classList.add('hidden');
+        }, 5000);
+      }
+      
+      function formatAnswer(text) {
+        return text
+          .replace(/\[(\d+)\]/g, '<sup>[$1]</sup>')
+          .replace(/\n/g, '<br>');
+      }
+      
+      function escapeHTML(str) {
+        return str
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+      
+      textInput.addEventListener('input', updateProcessButton);
+      
+      createNewSession();
+    });
+  </script>
+</body>
+</html>
