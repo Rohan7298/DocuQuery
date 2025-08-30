@@ -1,7 +1,11 @@
 services:
   - type: web
-    name: docuquery-pro
+    name: docuquery
     env: python
     pythonVersion: 3.11.0  # Use compatible Python version
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
+    buildCommand: |
+      apt-get update && apt-get install -y build-essential python3-dev
+      pip install --upgrade pip
+      pip install -r requirements.txt
+
+      startCommand: gunicorn app:app
