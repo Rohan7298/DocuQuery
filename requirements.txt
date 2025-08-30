@@ -3,7 +3,7 @@ flask-cors==4.0.0
 pdfplumber==0.10.3
 python-magic==0.4.27
 python-dotenv==1.0.0
-
+langchain
 langchain-community
 pinecone-client==2.2.4
 cohere==4.34
