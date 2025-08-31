@@ -5,7 +5,7 @@ python-magic
 python-dotenv
 langchain
 langchain-community
-pinecone-client
+pinecone
 cohere
 google-generativeai
 requests
